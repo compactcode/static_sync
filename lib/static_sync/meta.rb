@@ -10,6 +10,9 @@ module StaticSync
         :public => true
       }
       MIME::Types::of(file).each do |mime|
+        meta.merge!(
+          :content_type => MIME::Type.simplified(mime)
+        )
         if @config.cache.has_key?(mime.sub_type)
           expiry = @config.cache[mime.sub_type].to_i
           meta.merge!(

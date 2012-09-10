@@ -16,8 +16,19 @@ describe StaticSync::Meta do
     it "should be public" do
       Dir.chdir("spec/fixtures/site") do
         subject.for("index.html").should include(
-          :key    => "index.html",
-          :public => true
+          :key          => "index.html",
+          :content_type => "text/html",
+          :public       => true
+        )
+        subject.for("assets/stylesheets/screen.css").should include(
+          :key          => "assets/stylesheets/screen.css",
+          :content_type => "text/css",
+          :public       => true
+        )
+        subject.for("assets/javascripts/jquery.min.js").should include(
+          :key          => "assets/javascripts/jquery.min.js",
+          :content_type => "application/javascript",
+          :public       => true
         )
       end
     end
