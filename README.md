@@ -38,17 +38,27 @@ And run the following command any time you want to upload.
 
 ### Cache Control
 
-By default uploaded files have no cache headers set. 
+By default uploaded files have no cache headers set.
 
-You can add cache headers on a content type basis to your `.static` file: 
+You can add cache headers on a content type basis to your `.static` file:
 
-```yaml
+```
 cache:
   javascript: 31536000
   css: 31536000
 ```
 
 Which will cache all javscript and css files for 31536000 seconds (one year).
+
+### Compression
+
+By default uploaded files are not compressed.
+
+You can configure your text files to be uploaded using gzip compression in your `.static` file:
+
+```
+gzip: true
+```
 
 ## Contributing
 

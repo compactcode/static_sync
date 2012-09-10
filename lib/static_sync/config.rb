@@ -4,7 +4,7 @@ module StaticSync
     # TODO Validate.
 
     def cache
-      self['cache']
+      self['cache'] || {}
     end
 
     def source
@@ -23,13 +23,13 @@ module StaticSync
       self['remote']['directory']
     end
 
+    def gzip
+      self['gzip']
+    end
+
     def load(path = '.static')
       self.replace(YAML.load_file(path))
       self
-    end
-
-    def default(key=nil)
-      {}
     end
 
   end

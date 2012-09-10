@@ -1,5 +1,7 @@
 require "cgi"
 require "mime/types"
+require "tempfile"
+require "zlib"
 require "./lib/static_sync/config"
 require "./lib/static_sync/meta"
 
@@ -33,7 +35,7 @@ describe StaticSync::Meta do
       end
     end
 
-    it "should apply cache_control based on the given configuration" do
+    it "should cache files when requested" do
       config['cache'] = {
         'css'        => '86400',
         'javascript' => '86400'
@@ -50,6 +52,24 @@ describe StaticSync::Meta do
         subject.for("assets/javascripts/jquery.min.js").should include(
           :cache_control,
           :expires
+        )
+      end
+    end
+
+    it "should gzip files when requested" do
+      Dir.chdir("spec/fixtures/site") do
+        subject.for("index.html").should_not include(
+          :content_encoding => 'gzip'
+        )
+        config['gzip'] = true
+        subject.for("index.html").should include(
+          :content_encoding => 'gzip'
+        )
+        subject.for("assets/stylesheets/screen.css").should include(
+          :content_encoding => 'gzip'
+        )
+        subject.for("assets/javascripts/jquery.min.js").should include(
+          :content_encoding => 'gzip'
         )
       end
     end
