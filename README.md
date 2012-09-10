@@ -1,7 +1,13 @@
 # StaticSync
 
-TODO: Write a gem description
+This gem provides a stand alone mechanism for uploading static websites to cloud hosting providers such as 
+[Amazon AWS](http://en.wikipedia.org/wiki/Amazon_S3#Hosting_entire_websites).
 
+### Features
+
+* Works with any language / framework.
+* Configurable cache control.
+ 
 ## Installation
 
 ```bash
@@ -10,11 +16,12 @@ TODO: Write a gem description
 
 ## Usage
 
-In your project directory create a *.static* configuration file:
+In your project directory create a `.static` file:
 
-```yaml
+```
+> cat .static
 local:
-  directory: build # The directory to upload
+  directory: build
 
 remote:
   provider: AWS
@@ -23,7 +30,7 @@ remote:
   directory: my-aws-bucket
 ```
 
-Simply run the following command any time you want to upload your site.
+And run the following command any time you want to upload.
 
 ```bash
   static_sync
@@ -31,13 +38,17 @@ Simply run the following command any time you want to upload your site.
 
 ### Cache Control
 
-Specified in seconds.
+By default uploaded files have no cache headers set. 
+
+You can add cache headers on a content type basis to your `.static` file: 
 
 ```yaml
 cache:
   javascript: 31536000
   css: 31536000
 ```
+
+Which will cache all javscript and css files for 31536000 seconds (one year).
 
 ## Contributing
 
