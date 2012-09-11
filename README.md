@@ -5,9 +5,10 @@ This gem provides a stand alone mechanism for uploading static websites to cloud
 
 ### Features
 
-* Works with any language / framework.
-* Configurable cache control.
- 
+* Simple command line tool.
+* Custom cache headers per file type.
+* Automatic gzip compression.
+
 ## Installation
 
 ```bash
