@@ -5,8 +5,8 @@ This gem provides a stand alone mechanism for uploading static websites to cloud
 
 ### Features
 
-* Simple command line tool.
-* Custom cache headers per file type.
+* Standalone.
+* Configurable caching.
 * Automatic gzip compression.
 
 ## Installation
@@ -39,9 +39,9 @@ And run the following command any time you want to upload.
 
 ### Cache Control
 
-By default uploaded files have no cache headers set.
+By default uploaded files are not cached.
 
-You can add cache headers on a content type basis to your `.static` file:
+You can cache content for a given number of seconds by updating your `.static` file:
 
 ```
 cache:
@@ -49,13 +49,11 @@ cache:
   css: 31536000
 ```
 
-Which will cache all javscript and css files for 31536000 seconds (one year).
-
 ### Compression
 
 By default uploaded files are not compressed.
 
-You can configure your text files to be uploaded using gzip compression in your `.static` file:
+You can gzip all non binary content by updating your `.static` file:
 
 ```
 gzip: true
