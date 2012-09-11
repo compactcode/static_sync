@@ -42,16 +42,13 @@ describe StaticSync::Meta do
       }
       Dir.chdir("spec/fixtures/site") do
         subject.for("index.html").should_not include(
-          :cache_control,
-          :expires
+          :cache_control
         )
         subject.for("assets/stylesheets/screen.css").should include(
-          :cache_control,
-          :expires
+          :cache_control
         )
         subject.for("assets/javascripts/jquery.min.js").should include(
-          :cache_control,
-          :expires
+          :cache_control
         )
       end
     end

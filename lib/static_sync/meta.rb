@@ -27,8 +27,7 @@ module StaticSync
         if @config.cache.has_key?(mime.sub_type)
           expiry = @config.cache[mime.sub_type].to_i
           meta.merge!(
-            :cache_control => "public, max-age=#{expiry}",
-            :expires       => CGI.rfc1123_date(Time.now + expiry)
+            :cache_control => "public, max-age=#{expiry}"
           )
         end
       end
