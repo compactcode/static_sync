@@ -37,6 +37,22 @@ And run the following command any time you want to upload.
   static_sync
 ```
 
+### Environment Variables
+
+You can reference environment variables in your `.static` file like this:
+
+```
+> cat .static
+local:
+  directory: build
+
+remote:
+  provider: AWS
+  username: <%= ENV['s3_key'] %>
+  password: <%= ENV['s3_secret'] %>
+  directory: <%= ENV['s3_bucket'] %>
+```
+
 ### Cache Control
 
 By default uploaded files are not cached.
