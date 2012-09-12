@@ -22,7 +22,7 @@ In your project directory create a `.static` file:
 ```
 > cat .static
 local:
-  directory: build
+  directory: build # The directory to upload
 
 remote:
   provider: AWS
@@ -42,10 +42,6 @@ And run the following command any time you want to upload.
 You can reference environment variables in your `.static` file like this:
 
 ```
-> cat .static
-local:
-  directory: build
-
 remote:
   provider: AWS
   username: <%= ENV['s3_key'] %>
