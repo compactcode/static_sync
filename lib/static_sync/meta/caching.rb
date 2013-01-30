@@ -8,8 +8,10 @@ module StaticSync
 
       def for(file, mime)
         meta = {}
-        if @config.cache.has_key?(mime.sub_type)
-          expiry = @config.cache[mime.sub_type].to_i
+        type = mime.sub_type
+        type = mime.media_type if mime.media_type == "image"
+        if @config.cache.has_key?(type)
+          expiry = @config.cache[type].to_i
           meta.merge!(
             :cache_control => "public, max-age=#{expiry}"
           )

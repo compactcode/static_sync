@@ -57,8 +57,10 @@ You can cache content for a given number of seconds by updating your `.static` f
 
 ```
 cache:
+  html: 31536000
   javascript: 31536000
   css: 31536000
+  image: 31536000
 ```
 
 ### Compression
