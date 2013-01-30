@@ -1,11 +1,15 @@
+require_relative "meta/caching"
+require_relative "meta/compression"
+
 module StaticSync
   class Meta
 
     def initialize(config)
-      @config = config
+      @config      = config
+      @compression = Compression.new(@config)
+      @caching     = Caching.new(@config)
     end
 
-    #TODO This class / method has too many responsibilities.
     def for(file)
       meta = {
         :key    => file,
@@ -16,28 +20,10 @@ module StaticSync
         meta.merge!(
           :content_type => MIME::Type.simplified(mime)
         )
-        if @config.gzip && !mime.binary?
-          meta.merge!(
-            :body             => gzip(file),
-            :content_encoding => 'gzip'
-          )
-        end
-        if @config.cache.has_key?(mime.sub_type)
-          expiry = @config.cache[mime.sub_type].to_i
-          meta.merge!(
-            :cache_control => "public, max-age=#{expiry}"
-          )
-        end
+        meta.merge!(@compression.for(file, mime))
+        meta.merge!(@caching.for(file, mime))
       end
       meta
-    end
-
-    def gzip(file)
-      zipped = Tempfile.new("static_sync")
-      Zlib::GzipWriter.open(zipped) do |archive|
-        archive.write File.read(file)
-      end
-      zipped
     end
 
   end
