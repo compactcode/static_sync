@@ -13,6 +13,45 @@ describe StaticSync::Meta do
     StaticSync::Meta.new(config)
   end
 
+  it "sets appropriate content types for a range of common file types" do
+    Dir.chdir("spec/fixtures/site") do
+      subject.for("index.html").should                       include(:content_type => "text/html")
+      subject.for("assets/images/spinner.gif").should        include(:content_type => "image/gif")
+      subject.for("assets/stylesheets/screen.css").should    include(:content_type => "text/css")
+      subject.for("assets/javascripts/jquery.min.js").should include(:content_type => "application/javascript")
+    end
+  end
+
+  context "when gzip is disabled" do
+    before do
+      config['gzip'] = false
+    end
+
+    it "does not gzip html files" do
+      Dir.chdir("spec/fixtures/site") do
+        subject.for("index.html").should_not include(:content_encoding => "gzip")
+      end
+    end
+  end
+
+  context "when gzip is enabled" do
+    before do
+      config['gzip'] = true
+    end
+
+    it "gzips html files" do
+      Dir.chdir("spec/fixtures/site") do
+        subject.for("index.html").should include(:content_encoding => "gzip")
+      end
+    end
+
+    it "does not gzip binary files" do
+      Dir.chdir("spec/fixtures/site") do
+        subject.for("assets/images/spinner.gif").should_not include(:content_encoding => "gzip")
+      end
+    end
+  end
+
   describe "all files" do
 
     it "should be public" do
@@ -49,24 +88,6 @@ describe StaticSync::Meta do
         )
         subject.for("assets/javascripts/jquery.min.js").should include(
           :cache_control
-        )
-      end
-    end
-
-    it "should gzip files when requested" do
-      Dir.chdir("spec/fixtures/site") do
-        subject.for("index.html").should_not include(
-          :content_encoding => 'gzip'
-        )
-        config['gzip'] = true
-        subject.for("index.html").should include(
-          :content_encoding => 'gzip'
-        )
-        subject.for("assets/stylesheets/screen.css").should include(
-          :content_encoding => 'gzip'
-        )
-        subject.for("assets/javascripts/jquery.min.js").should include(
-          :content_encoding => 'gzip'
         )
       end
     end
