@@ -12,14 +12,12 @@ module StaticSync
         :body   => File.new(file),
         :public => true
       }
-      MIME::Types::of(file).each do |mime|
+      MIME::Types::of(file).reject(&:binary?).each do |mime|
         if @config.gzip
-          unless mime.binary?
-            meta.merge!(
-              :body             => gzip(file),
-              :content_encoding => 'gzip'
-            )
-          end
+          meta.merge!(
+            :body             => gzip(file),
+            :content_encoding => 'gzip'
+          )
         end
         meta.merge!(
           :content_type => MIME::Type.simplified(mime)
