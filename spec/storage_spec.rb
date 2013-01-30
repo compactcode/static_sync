@@ -22,22 +22,26 @@ describe StaticSync::Storage do
 
   before do
     Fog.mock!
-    config.storage.directories.create(
-      :key    => config.storage_directory,
-      :public => true
-    )
   end
 
   after do
     Fog::Mock.reset
   end
 
-  describe "html files" do
+  context "when syncing a simple html website" do
 
-    it "are uploaded to the remote directory" do
+    before do
+      config.storage.directories.create(
+        :key    => config.storage_directory,
+        :public => true
+      )
+    end
+
+    it "uploads all files" do
       subject.sync
 
       config.storage.directories.get(config.storage_directory).files.map(&:key).should == [
+        "assets/images/spinner.gif",
         "assets/javascripts/jquery.min.js",
         "assets/stylesheets/screen.css",
         "index.html"
