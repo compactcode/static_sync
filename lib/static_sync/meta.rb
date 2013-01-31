@@ -17,7 +17,8 @@ module StaticSync
       meta = {
         :key                => file,
         :body               => File.new(file),
-        :public             => true
+        :public             => true,
+        :storage_class      => 'REDUCED_REDUNDANCY'
       }
 
       MIME::Types::of(file).each do |mime|
