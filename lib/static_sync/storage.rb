@@ -17,8 +17,10 @@ module StaticSync
           current_file = @meta.for(file)
 
           unless remote_files.map(&:etag).include?(current_file[:etag])
-            log.info("Uploading #{file}") if @config.log
-            remote_files.create(current_file)
+            if current_file[:content_type]
+              log.info("Uploading #{file}") if @config.log
+              remote_files.create(current_file)
+            end
           end
         end
       end
