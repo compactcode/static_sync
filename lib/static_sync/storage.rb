@@ -29,7 +29,7 @@ module StaticSync
     private
 
     def remote_files
-      @config.storage.directories.get(@config.storage_directory).files
+      @remote_files ||= @config.storage.directories.get(@config.storage_directory).files
     end
 
     def create_remote_file(meta)
