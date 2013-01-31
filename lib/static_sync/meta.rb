@@ -15,10 +15,11 @@ module StaticSync
 
     def for(file)
       meta = {
-        :public             => true,
         :key                => file,
         :body               => File.new(file),
+        :public             => true
       }
+
       MIME::Types::of(file).each do |mime|
         meta.merge!(
           :content_type => MIME::Type.simplified(mime)
@@ -26,10 +27,13 @@ module StaticSync
         meta.merge!(@compression.for(file, mime))
         meta.merge!(@caching.for(file, mime))
       end
+
+      body = meta[:body].read
+
       meta.merge!(
-        :etag => Digest::MD5.hexdigest(meta[:body].read)
+        :etag        => Digest::MD5.hexdigest(body),   # A local version of the etag expected after upload.
+        :content_md5 => Digest::MD5.base64digest(body) # Enable checksum validation during uploads.
       )
-      meta
     end
 
   end
