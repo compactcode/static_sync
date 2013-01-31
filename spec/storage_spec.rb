@@ -4,6 +4,7 @@ describe StaticSync::Storage do
 
   let(:config) do
     StaticSync::Config.new.merge({
+      'log' => false,
       'local' => {
         'directory' => 'spec/fixtures/site'
       },
@@ -28,7 +29,7 @@ describe StaticSync::Storage do
     Fog::Mock.reset
   end
 
-  context "when syncing a simple html website" do
+  context "with a remote storage directory" do
 
     before do
       config.storage.directories.create(
@@ -37,17 +38,45 @@ describe StaticSync::Storage do
       )
     end
 
-    it "uploads all files" do
-      subject.sync
+    context "syncing a new html website" do
 
-      config.storage.directories.get(config.storage_directory).files.map(&:key).should == [
-        "assets/images/spinner.gif",
-        "assets/javascripts/jquery.min.js",
-        "assets/stylesheets/screen.css",
-        "index.html"
-      ]
+      describe "#sync" do
+
+        it "sets a unique key for each uploaded file" do
+          subject.sync
+
+          config.storage.directories.get(config.storage_directory).files.map(&:key).should == [
+            "assets/images/spinner.gif",
+            "assets/javascripts/jquery.min.js",
+            "assets/stylesheets/screen.css",
+            "index.html"
+          ]
+        end
+
+      end
     end
 
-  end
+    context "syncing an existing html website" do
 
+      before(:each) do
+        subject.sync
+      end
+
+      describe "#sync" do
+
+        it "does not upload existing identical files" do
+          subject.stub(:create_remote_file).and_raise('should not upload existing files')
+
+          subject.sync
+
+          config.storage.directories.get(config.storage_directory).files.map(&:key).should == [
+            "assets/images/spinner.gif",
+            "assets/javascripts/jquery.min.js",
+            "assets/stylesheets/screen.css",
+            "index.html"
+          ]
+        end
+      end
+    end
+  end
 end

@@ -1,10 +1,12 @@
 module StaticSync
   class Config < Hash
 
-    # TODO Validate.
+    def log
+      self.fetch('log', true)
+    end
 
     def cache
-      self['cache'] || {}
+      self.fetch('cache', {})
     end
 
     def source

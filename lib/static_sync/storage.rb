@@ -11,15 +11,27 @@ module StaticSync
     def sync
       Dir.chdir(@config.source) do
         Dir.glob("**/*.*") do |file|
-          log.info("Uploading #{file}")
-          @config.storage.directories.get(@config.storage_directory).files.create(
-            @meta.for(file)
-          )
+          current_file = @meta.for(file)
+
+          unless remote_files.map(&:key).include?(current_file[:key])
+            log.info("Uploading #{file}") if @config.log
+            create_remote_file(
+              current_file
+            )
+          end
         end
       end
     end
 
     private
+
+    def remote_files
+      @config.storage.directories.get(@config.storage_directory).files
+    end
+
+    def create_remote_file(meta)
+      remote_files.create(meta)
+    end
 
     def log
       @log ||= begin
