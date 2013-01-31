@@ -1,9 +1,4 @@
 require "rubygems"
-require "fog"
-require "erb"
-require "logger"
-require "tempfile"
-require "zlib"
 
 require_relative "static_sync/version"
 require_relative "static_sync/config"

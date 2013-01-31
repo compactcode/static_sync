@@ -1,4 +1,5 @@
-require "./lib/static_sync"
+require "./lib/static_sync/config"
+require "./lib/static_sync/storage"
 
 describe StaticSync::Storage do
 

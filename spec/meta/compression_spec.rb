@@ -1,6 +1,4 @@
 require "mime/types"
-require "tempfile"
-require "zlib"
 require "./lib/static_sync/config"
 require "./lib/static_sync/meta/compression"
 

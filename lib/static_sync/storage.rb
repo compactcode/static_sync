@@ -1,3 +1,6 @@
+require "fog"
+require "logger"
+
 require_relative "meta"
 
 module StaticSync

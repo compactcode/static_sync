@@ -1,3 +1,6 @@
+require "tempfile"
+require "zlib"
+
 module StaticSync
   class Meta
     class Compression

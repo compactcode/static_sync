@@ -1,3 +1,7 @@
+require "mime/types"
+require "base64"
+require "digest"
+
 require_relative "meta/caching"
 require_relative "meta/compression"
 

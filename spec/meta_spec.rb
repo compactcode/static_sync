@@ -1,5 +1,3 @@
-require "cgi"
-require "mime/types"
 require "./lib/static_sync/config"
 require "./lib/static_sync/meta"
 
