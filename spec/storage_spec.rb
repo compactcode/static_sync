@@ -39,7 +39,7 @@ describe StaticSync::Storage do
       )
     end
 
-    context "syncing a new html website" do
+    context "syncing a new site" do
 
       describe "#sync" do
 
@@ -57,27 +57,5 @@ describe StaticSync::Storage do
       end
     end
 
-    context "syncing an existing html website" do
-
-      before(:each) do
-        subject.sync
-      end
-
-      describe "#sync" do
-
-        it "does not upload existing identical files" do
-          subject.stub(:create_remote_file).and_raise('should not upload existing files')
-
-          subject.sync
-
-          config.storage.directories.get(config.storage_directory).files.map(&:key).should == [
-            "assets/images/spinner.gif",
-            "assets/javascripts/jquery.min.js",
-            "assets/stylesheets/screen.css",
-            "index.html"
-          ]
-        end
-      end
-    end
   end
 end

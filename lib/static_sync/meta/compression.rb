@@ -25,6 +25,9 @@ module StaticSync
       def gzip(file)
         zipped = Tempfile.new("static_sync")
         Zlib::GzipWriter.open(zipped) do |archive|
+          # Gzip by default incorporates file creation time into the content.
+          # For the purpose of repeatable etag comparison we want avoid this.
+          archive.mtime = 1
           archive.write File.read(file)
         end
         zipped

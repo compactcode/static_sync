@@ -16,11 +16,9 @@ module StaticSync
         Dir.glob("**/*.*") do |file|
           current_file = @meta.for(file)
 
-          unless remote_files.map(&:key).include?(current_file[:key])
+          unless remote_files.map(&:etag).include?(current_file[:etag])
             log.info("Uploading #{file}") if @config.log
-            create_remote_file(
-              current_file
-            )
+            remote_files.create(current_file)
           end
         end
       end
@@ -30,10 +28,6 @@ module StaticSync
 
     def remote_files
       @remote_files ||= @config.storage.directories.get(@config.storage_directory).files
-    end
-
-    def create_remote_file(meta)
-      remote_files.create(meta)
     end
 
     def log

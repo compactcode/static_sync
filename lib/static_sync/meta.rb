@@ -1,6 +1,5 @@
+require "digest/md5"
 require "mime/types"
-require "base64"
-require "digest"
 
 require_relative "meta/caching"
 require_relative "meta/compression"
@@ -16,9 +15,9 @@ module StaticSync
 
     def for(file)
       meta = {
-        :key    => file,
-        :body   => File.new(file),
-        :public => true
+        :public             => true,
+        :key                => file,
+        :body               => File.new(file),
       }
       MIME::Types::of(file).each do |mime|
         meta.merge!(
@@ -27,6 +26,9 @@ module StaticSync
         meta.merge!(@compression.for(file, mime))
         meta.merge!(@caching.for(file, mime))
       end
+      meta.merge!(
+        :etag => Digest::MD5.hexdigest(meta[:body].read)
+      )
       meta
     end
 
