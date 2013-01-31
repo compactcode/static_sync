@@ -1,7 +1,5 @@
 #!/usr/bin/env ruby
 
-require "rubygems"
-require "static_sync"
+require_relative "../lib/static_sync"
 
 StaticSync.upload
-

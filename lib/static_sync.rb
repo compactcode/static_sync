@@ -1,5 +1,3 @@
-require "rubygems"
-
 require_relative "static_sync/version"
 require_relative "static_sync/config"
 require_relative "static_sync/storage"
