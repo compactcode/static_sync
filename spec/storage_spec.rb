@@ -50,6 +50,7 @@ describe StaticSync::Storage do
             "assets/images/spinner.gif",
             "assets/javascripts/jquery.min.js",
             "assets/stylesheets/screen.css",
+            "cat.com/index.html",
             "index.html"
           ]
         end
