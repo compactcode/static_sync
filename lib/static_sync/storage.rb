@@ -19,7 +19,12 @@ module StaticSync
 
           unless remote_files.map(&:etag).include?(current_file[:etag])
             log.info("Uploading #{file}") if @config.log
-            remote_files.create(current_file)
+            begin
+              remote_files.create(current_file)
+            rescue => error
+              log.error("Failed to upload #{file}")
+              raise error
+            end
           end
         end
       end
