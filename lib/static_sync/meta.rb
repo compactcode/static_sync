@@ -23,11 +23,13 @@ module StaticSync
 
       mime = MIME::Types::of(file).first
 
-      meta.merge!(
-        :content_type => MIME::Type.simplified(mime)
-      )
-      meta.merge!(@compression.for(file, mime))
-      meta.merge!(@caching.for(file, mime))
+      if mime
+        meta.merge!(
+          :content_type => MIME::Type.simplified(mime)
+        )
+        meta.merge!(@compression.for(file, mime))
+        meta.merge!(@caching.for(file, mime))
+      end
 
       body = meta[:body].read
 

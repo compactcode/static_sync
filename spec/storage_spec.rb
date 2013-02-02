@@ -50,17 +50,10 @@ describe StaticSync::Storage do
             "assets/images/spinner.gif",
             "assets/javascripts/jquery.min.js",
             "assets/stylesheets/screen.css",
+            "assets/stylesheets/screen.scss",
             "cat.com/index.html",
             "index.html"
           ]
-        end
-
-        it "ignores files without a mime type" do
-          subject.sync
-
-          config.storage.directories.get(config.storage_directory).files.map(&:key).should_not include(
-            "assets/stylesheets/screen.scss"
-          )
         end
       end
     end

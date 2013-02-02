@@ -1,6 +1,5 @@
 require "fog"
 require "logger"
-require "mime/types"
 
 require_relative "meta"
 
@@ -34,7 +33,7 @@ module StaticSync
 
     def local_files
       Dir.glob("**/*.*").reject do |file|
-        File.directory?(file) || MIME::Types.of(file).empty?
+        File.directory?(file)
       end
     end
 
