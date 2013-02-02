@@ -21,13 +21,13 @@ module StaticSync
         :storage_class      => 'REDUCED_REDUNDANCY'
       }
 
-      MIME::Types::of(file).each do |mime|
-        meta.merge!(
-          :content_type => MIME::Type.simplified(mime)
-        )
-        meta.merge!(@compression.for(file, mime))
-        meta.merge!(@caching.for(file, mime))
-      end
+      mime = MIME::Types::of(file).first
+
+      meta.merge!(
+        :content_type => MIME::Type.simplified(mime)
+      )
+      meta.merge!(@compression.for(file, mime))
+      meta.merge!(@caching.for(file, mime))
 
       body = meta[:body].read
 
