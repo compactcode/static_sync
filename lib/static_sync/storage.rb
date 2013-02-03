@@ -12,7 +12,10 @@ module StaticSync
     end
 
     def sync
-      remote_tags = remote_files.map(&:etag)
+      remote_tags = []
+      remote_directory.files.each do |file|
+        remote_tags << file.etag
+      end
       Dir.chdir(@config.source) do
         local_files.each do |file|
           current_file = @meta.for(file)
@@ -20,7 +23,7 @@ module StaticSync
           unless remote_tags.include?(current_file[:etag])
             log.info("Uploading #{file}") if @config.log
             begin
-              remote_files.create(current_file)
+              remote_directory.files.create(current_file)
             rescue => error
               log.error("Failed to upload #{file}")
               raise error
@@ -38,8 +41,8 @@ module StaticSync
       end
     end
 
-    def remote_files
-      @remote_files ||= @config.storage.directories.get(@config.storage_directory).files
+    def remote_directory
+      @remote_directory ||= @config.storage.directories.new(:key => @config.storage_directory)
     end
 
     def log
