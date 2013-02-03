@@ -12,15 +12,16 @@ module StaticSync
     end
 
     def sync
-      remote_tags = []
+      remote_keys = []
       remote_directory.files.each do |file|
-        remote_tags << file.etag
+        remote_keys << [file.key, file.etag]
       end
       Dir.chdir(@config.source) do
         local_files.each do |file|
-          current_file = @meta.for(file)
+          current_file     = @meta.for(file)
+          current_file_key = [current_file[:key], current_file[:etag]]
 
-          unless remote_tags.include?(current_file[:etag])
+          unless remote_keys.include?(current_file_key)
             log.info("Uploading #{file}") if @config.log
             begin
               remote_directory.files.create(current_file)
