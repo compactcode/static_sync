@@ -12,11 +12,12 @@ module StaticSync
     end
 
     def sync
+      remote_tags = remote_files.map(&:etag)
       Dir.chdir(@config.source) do
         local_files.each do |file|
           current_file = @meta.for(file)
 
-          unless remote_files.map(&:etag).include?(current_file[:etag])
+          unless remote_tags.include?(current_file[:etag])
             log.info("Uploading #{file}") if @config.log
             begin
               remote_files.create(current_file)
