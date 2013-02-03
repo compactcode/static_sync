@@ -43,7 +43,7 @@ module StaticSync
     end
 
     def remote_directory
-      @remote_directory ||= @config.storage.directories.new(:key => @config.storage_directory)
+      @config.storage.directories.new(:key => @config.storage_directory)
     end
 
     def log
