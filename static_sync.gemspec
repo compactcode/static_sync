@@ -8,7 +8,7 @@ Gem::Specification.new do |gem|
   gem.version       = StaticSync::VERSION
   gem.authors       = ["Shanon McQuay"]
   gem.email         = ["shanonmcquay@gmail.com"]
-  gem.summary       = %q{Uploads your static website to cloud storage.}
+  gem.summary       = %q{Command line tool for uploading static websites to amazon/rackspace.}
 
   gem.files         = `git ls-files`.split($/)
   gem.bindir        = "bin"

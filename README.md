@@ -1,13 +1,19 @@
 # StaticSync
 
-This gem provides a stand alone mechanism for uploading static websites to cloud hosting providers such as 
-[Amazon AWS](http://en.wikipedia.org/wiki/Amazon_S3#Hosting_entire_websites).
+This gem provides a command line tool for uploading static websites to amazon/rackspace.
 
 ### Features
 
-* Standalone.
-* Configurable caching.
-* Automatic gzip compression.
+* Compares the md5 cheksum of each file before deciding to upload it.
+* Automatically gzips non binary files.
+* Sets appropriate HTTP metadata header information for serving html files.
+    * Content Type (text/css, image/png etc).
+    * Cache Control (public, max-age=31536000).
+    * Content Enconding (gzip).
+
+## Requirements
+
+* Ruby 1.9
 
 ## Installation
 
@@ -15,23 +21,36 @@ This gem provides a stand alone mechanism for uploading static websites to cloud
   gem install static_sync
 ```
 
-## Usage
+## Example Usage
 
 In your project directory create a `.static` file:
 
 ```
 > cat .static
-local:
-  directory: build # The directory to upload
 
+# Source directory
+local:
+  directory: build
+
+# Target directory
 remote:
   provider: AWS
   username: my-aws-key
   password: my-aws-secret
   directory: my-aws-bucket
+
+# Number of seconds to cache each content type, defaults to no cache.
+cache:
+  html: 31536000
+  javascript: 31536000
+  css: 31536000
+  image: 31536000
+
+# Flag to enable / disable automatic gzip compression.
+gzip: true
 ```
 
-And run the following command any time you want to upload.
+And simply run the following command any time you want to upload.
 
 ```bash
   static_sync
@@ -47,30 +66,6 @@ remote:
   username: <%= ENV['s3_key'] %>
   password: <%= ENV['s3_secret'] %>
   directory: <%= ENV['s3_bucket'] %>
-```
-
-### Cache Control
-
-By default uploaded files are not cached.
-
-You can cache content for a given number of seconds by updating your `.static` file:
-
-```
-cache:
-  html: 31536000
-  javascript: 31536000
-  css: 31536000
-  image: 31536000
-```
-
-### Compression
-
-By default uploaded files are not compressed.
-
-You can gzip all non binary content by updating your `.static` file:
-
-```
-gzip: true
 ```
 
 ## Contributing
