@@ -37,7 +37,13 @@ module StaticSync
     end
 
     def load(path = '.static')
-      self.replace(YAML.load(ERB.new(File.read(path)).result))
+      content = '{}'
+      begin
+        content = File.read(path)
+      rescue
+        # Loading config from file is not mandatory.
+      end
+      self.replace(YAML.load(ERB.new(content).result))
       self
     end
 
