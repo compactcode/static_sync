@@ -32,7 +32,7 @@ module StaticSync
     end
 
     def load(path = '.static')
-      self.replace(YAML.load_file(ERB.new(path).result))
+      self.replace(YAML.load(ERB.new(File.read(path)).result))
       self
     end
 
