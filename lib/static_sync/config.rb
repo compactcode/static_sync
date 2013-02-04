@@ -12,19 +12,23 @@ module StaticSync
     end
 
     def source
-      self['local']['directory']
+      self.fetch('local', {})['directory']
+    end
+
+    def remote
+      self.fetch('remote', {})
     end
 
     def storage
       Fog::Storage.new({
-        :provider              => self['remote']['provider'],
-        :aws_access_key_id     => self['remote']['username'],
-        :aws_secret_access_key => self['remote']['password']
+        :provider              => self.remote['provider'],
+        :aws_access_key_id     => self.remote['username'],
+        :aws_secret_access_key => self.remote['password']
       })
     end
 
     def storage_directory
-      self['remote']['directory']
+      self.remote['directory']
     end
 
     def gzip
