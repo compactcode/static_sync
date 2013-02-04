@@ -33,7 +33,7 @@ module StaticSync
     end
 
     def gzip
-      self['gzip']
+      self.fetch('gzip', true)
     end
 
     def load(path = '.static')
