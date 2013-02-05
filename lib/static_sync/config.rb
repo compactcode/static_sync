@@ -21,6 +21,7 @@ module StaticSync
 
     def storage
       Fog::Storage.new({
+        :persistent            => true,
         :provider              => self.remote['provider'],
         :region                => self.remote['region'],
         :aws_access_key_id     => self.remote['username'],
