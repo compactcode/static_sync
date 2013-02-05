@@ -38,6 +38,7 @@ ignored: (psd,gz)$
 # Where to upload
 remote:
   provider: AWS
+  region: ap-southeast-2
   username: my-aws-key
   password: my-aws-secret
   directory: my-aws-bucket
