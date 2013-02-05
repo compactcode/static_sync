@@ -12,6 +12,7 @@ module StaticSync
     end
 
     def sync
+      verify_remote_directory
       remote_keys = []
       remote_directory.files.each do |file|
         remote_keys << [file.key, file.etag]
@@ -49,7 +50,11 @@ module StaticSync
     end
 
     def remote_directory
-      @config.storage.directories.get(@config.storage_directory)
+      @remote_directory ||= @config.storage.directories.get(@config.storage_directory)
+    end
+
+    def verify_remote_directory
+      @config.storage.get_bucket(@config.storage_directory)
     end
 
     def log
