@@ -28,11 +28,14 @@ In your project directory create a `.static` file:
 ```
 > cat .static
 
-# Source directory
+# What to upload
 local:
   directory: build
 
-# Target directory
+# What not to upload (ruby regular expression).
+ignored: (psd,gz)$
+
+# Where to upload
 remote:
   provider: AWS
   username: my-aws-key
@@ -45,9 +48,6 @@ cache:
   javascript: 31536000
   css: 31536000
   image: 31536000
-
-# Flag to enable / disable automatic gzip compression.
-gzip: true
 ```
 
 And simply run the following command any time you want to upload.

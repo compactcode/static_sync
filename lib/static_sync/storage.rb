@@ -17,7 +17,7 @@ module StaticSync
         remote_keys << [file.key, file.etag]
       end
       Dir.chdir(@config.source) do
-        local_files.each do |file|
+        local_filtered_files.each do |file|
           current_file     = @meta.for(file)
           current_file_key = [current_file[:key], current_file[:etag]]
 
@@ -35,6 +35,12 @@ module StaticSync
     end
 
     private
+
+    def local_filtered_files
+      local_files.reject do |file|
+        file =~ Regexp.new(@config.ignored) if @config.ignored
+      end
+    end
 
     def local_files
       Dir.glob("**/*.*").reject do |file|

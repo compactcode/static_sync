@@ -58,5 +58,27 @@ describe StaticSync::Storage do
       end
     end
 
+    context "synching ignored files" do
+
+      describe "#sync" do
+
+        before do
+          config.merge!(
+            'ignored' => '(css|gif)$'
+          )
+        end
+
+        it "does not upload them" do
+          subject.sync
+
+          config.storage.directories.get(config.storage_directory).files.map(&:key).should == [
+            "assets/javascripts/jquery.min.js",
+            "cat.com/index.html",
+            "index.html"
+          ]
+        end
+      end
+    end
+
   end
 end

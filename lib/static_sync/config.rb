@@ -36,6 +36,10 @@ module StaticSync
       self.fetch('gzip', true)
     end
 
+    def ignored
+      self['ignored']
+    end
+
     def load(path = '.static')
       content = '{}'
       begin
