@@ -11,12 +11,16 @@ module StaticSync
       self.fetch('cache', {})
     end
 
+    def remote
+      self.fetch('remote', {})
+    end
+
     def source
       self.fetch('local', {})['directory']
     end
 
-    def remote
-      self.fetch('remote', {})
+    def target
+      self.remote['directory']
     end
 
     def storage
@@ -27,10 +31,6 @@ module StaticSync
         :aws_access_key_id     => self.remote['username'],
         :aws_secret_access_key => self.remote['password']
       })
-    end
-
-    def storage_directory
-      self.remote['directory']
     end
 
     def gzip

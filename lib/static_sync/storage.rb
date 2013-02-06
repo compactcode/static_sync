@@ -17,6 +17,7 @@ module StaticSync
       remote_directory.files.each do |file|
         remote_keys << [file.key, file.etag]
       end
+      log.info("Synching #{@config.source} to #{@config.target}.") if @config.log
       Dir.chdir(@config.source) do
         local_filtered_files.each do |file|
           current_file     = @meta.for(file)
@@ -32,6 +33,7 @@ module StaticSync
             end
           end
         end
+        log.info("Synching done.") if @config.log
       end
     end
 
@@ -50,11 +52,11 @@ module StaticSync
     end
 
     def remote_directory
-      @config.storage.directories.new(:key => @config.storage_directory)
+      @config.storage.directories.new(:key => @config.target)
     end
 
     def verify_remote_directory
-      @config.storage.get_bucket(@config.storage_directory)
+      @config.storage.get_bucket(@config.target)
     end
 
     def log
