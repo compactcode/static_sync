@@ -1,6 +1,6 @@
 # StaticSync
 
-This gem provides a command line tool for uploading static websites to amazon/rackspace.
+This gem provides a command line tool for uploading static websites to amazon s3.
 
 ### Features
 
@@ -49,6 +49,9 @@ cache:
   javascript: 31536000
   css: 31536000
   image: 31536000
+
+# 0 For debug, 3 for error.
+log_level: 0
 ```
 
 And simply run the following command any time you want to upload.

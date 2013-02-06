@@ -1,41 +1,98 @@
-require "fog"
+require "awsraw/s3/client"
 require "logger"
+require "nokogiri"
 
-require_relative "meta"
+require_relative "uploadable"
 
 module StaticSync
   class Storage
 
+    class FatalError < StandardError
+    end
+
     def initialize(config)
       @config = config
-      @meta   = Meta.new(config)
     end
 
     def sync
-      verify_remote_directory
-      remote_keys = []
-      remote_directory.files.each do |file|
-        remote_keys << [file.key, file.etag]
-      end
-      Dir.chdir(@config.source) do
-        local_filtered_files.each do |file|
-          current_file     = @meta.for(file)
-          current_file_key = [current_file[:key], current_file[:etag]]
 
-          unless remote_keys.include?(current_file_key)
-            log.info("Uploading #{file}") if @config.log
-            begin
-              remote_directory.files.create(current_file)
-            rescue => error
-              log.error("Failed to upload #{file}")
-              raise error
-            end
+      s3 = AWSRaw::S3::Client.new(
+        @config.remote['username'],
+        @config.remote['password']
+      )
+
+      Dir.chdir(@config.local['directory']) do
+        local_filtered_files.each do |file|
+          current_file = Uploadable.new(file, @config)
+
+          if remote_file_ids(s3).include?(current_file.id)
+            log.debug("Ignoring #{current_file.path}")
+          else
+            log.info("Uploading #{current_file.path}")
+
+            response = s3.request(
+              :method  => "PUT",
+              :region  => @config.remote['region'],
+              :bucket  => @config.remote['directory'],
+              :key     => current_file.path,
+              :content => current_file.content,
+              :headers => current_file.headers
+            )
+
+            validate_response(response)
           end
         end
       end
     end
 
     private
+
+    def validate_response(response)
+      if response.failure?
+        log.error("HTTP(#{response.code}) while communicationg with the #{@config.remote['directory']} bucket.")
+        log.error(response.content)
+        exit(false)
+      end
+    end
+
+    # TODO: This method is horrible.
+    def remote_file_ids(s3)
+      @remote_file_ids ||= begin
+        results = []
+
+        no_more_objects = false
+
+        until no_more_objects
+
+          response = s3.request(
+            :method => "GET",
+            :region => @config.remote['region'],
+            :bucket => @config.remote['directory'],
+            :query  => "marker=#{results.fetch(-1, []).first}"
+          )
+
+          validate_response(response)
+
+          @doc = Nokogiri::XML(response.content)
+          @doc.remove_namespaces!
+
+          keys = @doc.xpath("//Contents/Key").map do |node|
+            node.inner_text
+          end
+
+          etags = @doc.xpath("//Contents/ETag").map do |node|
+            node.inner_text.gsub("\"", "")
+          end
+
+          results.concat(keys.zip(etags))
+
+          no_more_objects = @doc.at_xpath("//IsTruncated").content == 'false'
+
+        end
+
+        results
+      end
+    end
 
     def local_filtered_files
       local_files.reject do |file|
@@ -49,17 +106,10 @@ module StaticSync
       end
     end
 
-    def remote_directory
-      @config.storage.directories.new(:key => @config.storage_directory)
-    end
-
-    def verify_remote_directory
-      @config.storage.get_bucket(@config.storage_directory)
-    end
-
     def log
       @log ||= begin
         logger = Logger.new(STDOUT)
+        logger.level = @config.log_level
         logger.formatter = proc do |severity, datetime, progname, msg|
             "#{datetime}: #{severity} -- #{msg}\n"
         end

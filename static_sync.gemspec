@@ -17,7 +17,8 @@ Gem::Specification.new do |gem|
   gem.require_paths = ["lib"]
   gem.has_rdoc      = false
 
-  gem.add_dependency("fog", [">= 1.5.0"])
+  gem.add_dependency("awsraw",   [">= 0.1.1"])
+  gem.add_dependency("nokogiri", [">= 1.5.0"])
 
   gem.add_development_dependency('rspec')
 end

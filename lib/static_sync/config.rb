@@ -1,36 +1,24 @@
 require "erb"
+require "logger"
+require "yaml"
 
 module StaticSync
   class Config < Hash
 
-    def log
-      self.fetch('log', true)
+    def log_level
+      self.fetch('log_level', Logger::INFO)
     end
 
     def cache
       self.fetch('cache', {})
     end
 
-    def source
-      self.fetch('local', {})['directory']
+    def local
+      self.fetch('local', {})
     end
 
     def remote
       self.fetch('remote', {})
-    end
-
-    def storage
-      Fog::Storage.new({
-        :persistent            => true,
-        :provider              => self.remote['provider'],
-        :region                => self.remote['region'],
-        :aws_access_key_id     => self.remote['username'],
-        :aws_secret_access_key => self.remote['password']
-      })
-    end
-
-    def storage_directory
-      self.remote['directory']
     end
 
     def gzip
