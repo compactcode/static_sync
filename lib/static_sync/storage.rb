@@ -12,12 +12,12 @@ module StaticSync
     end
 
     def sync
+      log.info("Synching #{@config.source} to #{@config.target}.") if @config.log
       verify_remote_directory
       remote_keys = []
       remote_directory.files.each do |file|
         remote_keys << [file.key, file.etag]
       end
-      log.info("Synching #{@config.source} to #{@config.target}.") if @config.log
       Dir.chdir(@config.source) do
         local_filtered_files.each do |file|
           current_file     = @meta.for(file)
@@ -33,8 +33,8 @@ module StaticSync
             end
           end
         end
-        log.info("Synching done.") if @config.log
       end
+      log.info("Synching done.") if @config.log
     end
 
     private
