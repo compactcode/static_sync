@@ -41,6 +41,10 @@ describe StaticSync::Meta::Caching do
         subject.for("index.html", html).should include(:cache_control)
       end
 
+      it "sets expires headers for html files" do
+        subject.for("index.html", html).should include(:expires)
+      end
+
       it "does not set cache headers for text files" do
         subject.for("data.txt", plain).should_not include(:cache_control)
       end

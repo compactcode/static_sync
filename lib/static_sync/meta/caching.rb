@@ -1,3 +1,5 @@
+require 'cgi'
+
 module StaticSync
   class Meta
     class Caching
@@ -13,7 +15,8 @@ module StaticSync
         if @config.cache.has_key?(type)
           expiry = @config.cache[type].to_i
           meta.merge!(
-            :cache_control => "public, max-age=#{expiry}"
+            :cache_control => "public, max-age=#{expiry}",
+            :expires       => CGI.rfc1123_date(Time.now + expiry)
           )
         end
         meta
