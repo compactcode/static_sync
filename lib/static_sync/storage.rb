@@ -4,21 +4,28 @@ require "logger"
 module StaticSync
   class Storage
 
+    class Version < Struct.new(:path, :etag)
+    end
+
     def initialize(config)
       @config = config
 
       validate_credentials!
     end
 
-    def exists?(id)
-      ids.include?(id)
+    def has_file?(version)
+      file_versions.map(&:path).include?(version.path)
     end
 
-    def ids
-      @ids ||= begin
+    def has_version?(version)
+      file_versions.include?(version)
+    end
+
+    def file_versions
+      @file_versions ||= begin
         result = []
         remote_directory.files.each do |file|
-          result << [file.key, file.etag]
+          result << Version.new(file.key, file.etag)
         end
         result
       end

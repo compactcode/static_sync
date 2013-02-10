@@ -4,11 +4,13 @@ require "mime/types"
 require "tempfile"
 require "zlib"
 
+require_relative "storage"
+
 module StaticSync
   class Uploadable < Struct.new(:path, :config)
 
-    def id
-      [path, etag]
+    def version
+      Storage::Version.new(path, etag)
     end
 
     def mime

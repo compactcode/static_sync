@@ -18,8 +18,12 @@ module StaticSync
         local_filtered_files.each do |file|
           current_file = Uploadable.new(file, @config)
 
-          unless @storage.exists?(current_file.id)
-            log.info("Uploading #{file}") if @config.log
+          unless @storage.has_version?(current_file.version)
+            if @storage.has_file?(current_file.version)
+              log.info("Overwriting #{file}") if @config.log
+            else
+              log.info("Uploading #{file}") if @config.log
+            end
             begin
               @storage.create(current_file.headers)
             rescue => error
