@@ -1,72 +1,41 @@
 require "fog"
 require "logger"
 
-require_relative "meta"
-
 module StaticSync
   class Storage
 
     def initialize(config)
       @config = config
-      @meta   = Meta.new(config)
+
+      validate_credentials!
     end
 
-    def sync
-      log.info("Synching #{@config.source} to #{@config.target}.") if @config.log
-      verify_remote_directory
-      remote_keys = []
-      remote_directory.files.each do |file|
-        remote_keys << [file.key, file.etag]
-      end
-      Dir.chdir(@config.source) do
-        local_filtered_files.each do |file|
-          current_file     = @meta.for(file)
-          current_file_key = [current_file[:key], current_file[:etag]]
+    def exists?(id)
+      ids.include?(id)
+    end
 
-          unless remote_keys.include?(current_file_key)
-            log.info("Uploading #{file}") if @config.log
-            begin
-              remote_directory.files.create(current_file)
-            rescue => error
-              log.error("Failed to upload #{file}")
-              raise error
-            end
-          end
+    def ids
+      @ids ||= begin
+        result = []
+        remote_directory.files.each do |file|
+          result << [file.key, file.etag]
         end
+        result
       end
-      log.info("Synching done.") if @config.log
+    end
+
+    def create(headers)
+      remote_directory.files.create(headers)
     end
 
     private
-
-    def local_filtered_files
-      local_files.reject do |file|
-        file =~ Regexp.new(@config.ignored) if @config.ignored
-      end
-    end
-
-    def local_files
-      Dir.glob("**/*.*").reject do |file|
-        File.directory?(file)
-      end
-    end
 
     def remote_directory
       @config.storage.directories.new(:key => @config.target)
     end
 
-    def verify_remote_directory
+    def validate_credentials!
       @config.storage.get_bucket(@config.target)
-    end
-
-    def log
-      @log ||= begin
-        logger = Logger.new(STDOUT)
-        logger.formatter = proc do |severity, datetime, progname, msg|
-            "#{datetime}: #{severity} -- #{msg}\n"
-        end
-        logger
-      end
     end
 
   end

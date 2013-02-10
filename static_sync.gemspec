@@ -20,4 +20,5 @@ Gem::Specification.new do |gem|
   gem.add_dependency("fog", [">= 1.5.0"])
 
   gem.add_development_dependency('rspec')
+  gem.add_development_dependency('timecop')
 end
