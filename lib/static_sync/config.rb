@@ -7,6 +7,14 @@ module StaticSync
       self.fetch('log', true)
     end
 
+    def gzip
+      self.fetch('gzip', true)
+    end
+
+    def immutable_mode
+      self.fetch('immutable_mode', false)
+    end
+
     def cache
       self.fetch('cache', {})
     end
@@ -31,10 +39,6 @@ module StaticSync
         :aws_access_key_id     => self.remote['username'],
         :aws_secret_access_key => self.remote['password']
       })
-    end
-
-    def gzip
-      self.fetch('gzip', true)
     end
 
     def ignored

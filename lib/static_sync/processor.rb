@@ -7,6 +7,9 @@ require_relative "uploadable"
 module StaticSync
   class Processor
 
+    class ImmutableError < StandardError
+    end
+
     def initialize(config, storage = nil)
       @config  = config
       @storage = storage || StaticSync::Storage.new(config)
@@ -21,6 +24,9 @@ module StaticSync
           unless @storage.has_version?(current_file.version)
             if @storage.has_file?(current_file.version)
               log.info("Overwriting #{file}") if @config.log
+              if @config.immutable_mode
+                raise ImmutableError, "immutable_mode does not allow modifications to existing files."
+              end
             else
               log.info("Uploading #{file}") if @config.log
             end
