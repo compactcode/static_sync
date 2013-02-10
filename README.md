@@ -32,9 +32,6 @@ In your project directory create a `.static` file:
 local:
   directory: build
 
-# What not to upload (ruby regular expression).
-ignored: (psd,gz)$
-
 # Where to upload
 remote:
   provider: AWS
@@ -43,12 +40,20 @@ remote:
   password: my-aws-secret
   directory: my-aws-bucket
 
+# Everything below this line is optional.
+
+# What not to upload (ruby regular expression).
+ignored: (psd,gz)$
+
 # Number of seconds to cache each content type, defaults to no cache.
 cache:
   html: 31536000
   javascript: 31536000
   css: 31536000
   image: 31536000
+
+# If you wish to strictly prevent modification of existing files.
+immutable_mode: false
 ```
 
 And simply run the following command any time you want to upload.

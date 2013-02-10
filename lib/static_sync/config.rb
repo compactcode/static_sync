@@ -7,10 +7,6 @@ module StaticSync
       self.fetch('log', true)
     end
 
-    def gzip
-      self.fetch('gzip', true)
-    end
-
     def immutable_mode
       self.fetch('immutable_mode', false)
     end
