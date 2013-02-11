@@ -21,13 +21,11 @@ This gem provides a command line tool for uploading static websites to amazon/ra
   gem install static_sync
 ```
 
-## Example Usage
+## Example Command Line Usage
 
 In your project directory create a `.static` file:
 
 ```
-> cat .static
-
 # What to upload
 local:
   directory: build
@@ -53,7 +51,7 @@ cache:
   image: 31536000
 
 # If you wish to strictly prevent modification of existing files.
-immutable_mode: false
+immutable_mode: 'false'
 ```
 
 And simply run the following command any time you want to upload.
@@ -62,16 +60,33 @@ And simply run the following command any time you want to upload.
   static_sync
 ```
 
-### Environment Variables
+## Example Ruby Project Usage
+
+Very similar to the command line version except options can passed as a hash instead of being read from .static
+
+```
+require 'static_sync'
+
+StaticSync.upload(
+  'local' => {
+    ...
+  },
+  'remote' => {
+    ...      
+  }
+)
+```
+
+## Environment Variables
 
 You can reference environment variables in your `.static` file like this:
 
 ```
 remote:
   provider: AWS
-  username: <%= ENV['s3_key'] %>
-  password: <%= ENV['s3_secret'] %>
-  directory: <%= ENV['s3_bucket'] %>
+  username: <%= ENV['S3_KEY'] %>
+  password: <%= ENV['S3_SECRET'] %>
+  directory: <%= ENV['S3_BUCKET'] %>
 ```
 
 ## Contributing
