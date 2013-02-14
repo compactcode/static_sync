@@ -27,7 +27,7 @@ describe StaticSync::Processor do
     end
 
     it "does not include files matching the ignore regex" do
-      Dir.chdir(config.source) do
+      Dir.chdir(config.local_directory) do
         subject.local_filtered_files.should == [
           "assets/javascripts/jquery.min.js",
           "cat.com/index.html",

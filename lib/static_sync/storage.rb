@@ -1,11 +1,7 @@
 require "fog"
-require "logger"
 
 module StaticSync
   class Storage
-
-    class Version < Struct.new(:path, :etag)
-    end
 
     def initialize(config)
       @config = config
@@ -14,20 +10,21 @@ module StaticSync
     end
 
     def has_file?(version)
-      file_versions.map(&:path).include?(version.path)
+      cache.has_file?(version)
     end
 
     def has_version?(version)
-      file_versions.include?(version)
+      cache.has_version?(version)
     end
 
-    def file_versions
-      @file_versions ||= begin
-        result = []
+    def cache
+      @cache ||= begin
+        versions = []
         remote_directory.files.each do |file|
-          result << Version.new(file.key, file.etag)
+          versions << StorageCache::Version.new(file.key, file.etag)
         end
-        result
+        versions
+        StorageCache.new(versions)
       end
     end
 
@@ -38,11 +35,21 @@ module StaticSync
     private
 
     def remote_directory
-      @config.storage.directories.new(:key => @config.target)
+      storage.directories.new(:key => @config.remote['directory'])
     end
 
     def validate_credentials!
-      @config.storage.get_bucket(@config.target)
+      storage.get_bucket(@config.remote['directory'])
+    end
+
+    def storage
+      Fog::Storage.new({
+        :persistent            => true,
+        :provider              => @config.remote['provider'],
+        :region                => @config.remote['region'],
+        :aws_access_key_id     => @config.remote['username'],
+        :aws_secret_access_key => @config.remote['password']
+      })
     end
 
   end

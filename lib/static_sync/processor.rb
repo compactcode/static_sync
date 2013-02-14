@@ -1,4 +1,3 @@
-require "fog"
 require "logger"
 
 require_relative "storage"
@@ -16,8 +15,8 @@ module StaticSync
     end
 
     def sync
-      log.info("Synching #{@config.source} to #{@config.target}.") if @config.log
-      Dir.chdir(@config.source) do
+      log.info("Synching #{@config.local_directory} to #{@config.remote_directory}.") if @config.log
+      Dir.chdir(@config.local_directory) do
         local_filtered_files.each do |file|
           current_file = Uploadable.new(file, @config)
 

@@ -7,38 +7,32 @@ module StaticSync
       self.fetch('log', true)
     end
 
-    def immutable_mode
-      self.fetch('immutable_mode', false)
+    def local
+      self.fetch('local', {})
     end
 
-    def cache
-      self.fetch('cache', {})
+    def local_directory
+      self.local['directory']
     end
 
     def remote
       self.fetch('remote', {})
     end
 
-    def source
-      self.fetch('local', {})['directory']
-    end
-
-    def target
+    def remote_directory
       self.remote['directory']
     end
 
-    def storage
-      Fog::Storage.new({
-        :persistent            => true,
-        :provider              => self.remote['provider'],
-        :region                => self.remote['region'],
-        :aws_access_key_id     => self.remote['username'],
-        :aws_secret_access_key => self.remote['password']
-      })
+    def cache
+      self.fetch('cache', {})
     end
 
     def ignored
-      self['ignored']
+      self.fetch('ignored', nil)
+    end
+
+    def immutable_mode
+      self.fetch('immutable_mode', false)
     end
 
     def load(path = '.static')
