@@ -51,7 +51,7 @@ cache:
   image: 31536000
 
 # If you wish to strictly prevent modification of existing files.
-immutable_mode: 'false'
+conflict_mode: 'fail'
 ```
 
 And simply run the following command any time you want to upload.

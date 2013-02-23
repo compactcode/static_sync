@@ -31,8 +31,8 @@ module StaticSync
       self.fetch('ignored', nil)
     end
 
-    def immutable_mode
-      self.fetch('immutable_mode', false)
+    def conflict_mode
+      self.fetch('conflict_mode', 'overwrite')
     end
 
     def load(path = '.static')
