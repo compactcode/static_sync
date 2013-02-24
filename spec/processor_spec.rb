@@ -18,6 +18,36 @@ describe StaticSync::Processor do
     StaticSync::Processor.new(config, storage)
   end
 
+  describe "#handle_conflict" do
+    let(:file) { stub }
+
+    context "when in overwrite mode" do
+      let(:config) do
+        StaticSync::Config.new.merge({
+          'conflict_mode' => 'overwrite'
+        })
+      end
+
+      it "does nothing" do
+        subject.handle_conflict(file)
+      end
+    end
+
+    context "when in fail mode" do
+      let(:config) do
+        StaticSync::Config.new.merge({
+          'conflict_mode' => 'fail'
+        })
+      end
+
+      it "raises a conflict error" do
+        expect {
+          subject.handle_conflict(file)
+        }.to raise_error(StaticSync::Processor::ConflictError)
+      end
+    end
+  end
+
   describe "#local_filtered_files" do
 
     before do

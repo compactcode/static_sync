@@ -22,10 +22,7 @@ module StaticSync
 
           unless @storage.has_version?(current_file.version)
             if @storage.has_file?(current_file.version)
-              log.info("Overwriting #{file}") if @config.log
-              if @config.conflict_mode == 'fail'
-                raise ConflictError, "conflict_mode does not allow modifications to existing files."
-              end
+              handle_conflict(file)
             else
               log.info("Uploading #{file}") if @config.log
             end
@@ -39,6 +36,13 @@ module StaticSync
         end
       end
       log.info("Synching done.") if @config.log
+    end
+
+    def handle_conflict(file)
+      log.info("Overwriting #{file}") if @config.log
+      if @config.conflict_mode == 'fail'
+        raise ConflictError, "modifications to existing files are not allowed."
+      end
     end
 
     def local_filtered_files
