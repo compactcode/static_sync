@@ -40,8 +40,12 @@ module StaticSync
 
     def handle_conflict(file)
       log.info("Overwriting #{file}") if @config.log
-      if @config.conflict_mode == 'fail'
+      if @config.fail_on_conflict?
         raise ConflictError, "modifications to existing files are not allowed."
+      elsif @config.fail_on_conflict_if_cached?
+        if file.cached?
+          raise ConflictError, "modifications to existing cached files are not allowed."
+        end
       end
     end
 

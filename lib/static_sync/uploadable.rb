@@ -33,6 +33,10 @@ module StaticSync
       end
     end
 
+    def cached?
+      !cache_time.nil?
+    end
+
     def cache_time
       if mime
         type = mime.sub_type

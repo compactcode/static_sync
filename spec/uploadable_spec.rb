@@ -68,6 +68,23 @@ describe StaticSync::Uploadable do
 
   end
 
+  describe "#cached?" do
+    it "returns false by default" do
+      subject.cached?.should be_false
+    end
+
+    context "when caching is enabled for html" do
+
+      before do
+        config['cache'] = { 'html' => '86400' }
+      end
+
+      it "returns true for a html file" do
+        html_file.cached?.should be_true
+      end
+    end
+  end
+
   describe "#cache_time" do
 
     context "when caching is disabled" do
@@ -76,7 +93,7 @@ describe StaticSync::Uploadable do
         config['cache'] = { }
       end
 
-      it "is nil for html files" do
+      it "returns nil for a html file" do
         html_file.cache_time.should be_nil
       end
     end
@@ -87,15 +104,15 @@ describe StaticSync::Uploadable do
         config['cache'] = { 'html' => '86400' }
       end
 
-      it "is the configured value for html files" do
+      it "returns the configured value for html files" do
         html_file.cache_time.should == 86400
       end
 
-      it "is the configured value for text files" do
+      it "returns the configured value for text files" do
         text_file.cache_time.should be_nil
       end
 
-      it "is nil for css files" do
+      it "returns nil for css files" do
         css_file.cache_time.should be_nil
       end
     end
@@ -106,11 +123,11 @@ describe StaticSync::Uploadable do
         config['cache'] = { 'image' => '86400' }
       end
 
-      it "is the configured value for gif files" do
+      it "returns the configured value for gif files" do
         gif_file.cache_time.should == 86400
       end
 
-      it "is the configured value for png files" do
+      it "returns the configured value for png files" do
         png_file.cache_time.should == 86400
       end
     end
@@ -119,11 +136,11 @@ describe StaticSync::Uploadable do
 
   describe "#gzipped?" do
 
-    it "is true for html files" do
+    it "returns true for html files" do
       html_file.gzipped?.should be_true
     end
 
-    it "is false for png files" do
+    it "returns false for png files" do
       png_file.gzipped?.should be_false
     end
 

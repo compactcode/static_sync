@@ -50,8 +50,11 @@ cache:
   css: 31536000
   image: 31536000
 
-# If you wish to strictly prevent modification of existing files.
-conflict_mode: 'fail'
+# If you wish to prevent modification of existing files.
+# conflict_mode: 'fail'
+
+# If you wish to prevent modification of existing files that are cached.
+# conflict_mode: 'fail_if_cached'
 ```
 
 And simply run the following command any time you want to upload.

@@ -35,6 +35,14 @@ module StaticSync
       self.fetch('conflict_mode', 'overwrite')
     end
 
+    def fail_on_conflict?
+      conflict_mode == 'fail'
+    end
+
+    def fail_on_conflict_if_cached?
+      conflict_mode == 'fail_if_cached'
+    end
+
     def load(path = '.static')
       content = '{}'
       begin

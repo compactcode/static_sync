@@ -46,6 +46,30 @@ describe StaticSync::Processor do
         }.to raise_error(StaticSync::Processor::ConflictError)
       end
     end
+
+    context "when in fail on cache mode" do
+      let(:file) { stub(:cached? => false) }
+
+      let(:config) do
+        StaticSync::Config.new.merge({
+          'conflict_mode' => 'fail_if_cached'
+        })
+      end
+
+      it "does nothing by default" do
+        subject.handle_conflict(file)
+      end
+
+      context "when the file is cached" do
+        let(:file) { stub(:cached? => true) }
+
+        it "raises a conflict error" do
+          expect {
+            subject.handle_conflict(file)
+          }.to raise_error(StaticSync::Processor::ConflictError)
+        end
+      end
+    end
   end
 
   describe "#local_filtered_files" do
