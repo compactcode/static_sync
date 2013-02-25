@@ -22,7 +22,7 @@ module StaticSync
 
           unless @storage.has_version?(current_file.version)
             if @storage.has_file?(current_file.version)
-              handle_conflict(file)
+              handle_conflict(current_file)
             else
               log.info("Uploading #{file}") if @config.log
             end
