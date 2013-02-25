@@ -41,7 +41,7 @@ remote:
 # Everything below this line is optional.
 
 # What not to upload (ruby regular expression).
-ignored: (psd,gz)$
+ignored: (psd|gz)$
 
 # Number of seconds to cache each content type, defaults to no cache.
 cache:
