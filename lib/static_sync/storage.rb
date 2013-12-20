@@ -43,7 +43,7 @@ module StaticSync
     end
 
     def storage
-      Fog::Storage.new({
+      @storage ||= Fog::Storage.new({
         :persistent            => true,
         :provider              => @config.remote['provider'],
         :region                => @config.remote['region'],
