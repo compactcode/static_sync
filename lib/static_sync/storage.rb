@@ -48,7 +48,8 @@ module StaticSync
         :provider              => @config.remote['provider'],
         :region                => @config.remote['region'],
         :aws_access_key_id     => @config.remote['username'],
-        :aws_secret_access_key => @config.remote['password']
+        :aws_secret_access_key => @config.remote['password'],
+        :path_style            => @config.remote['path_style']
       })
     end
 
