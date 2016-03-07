@@ -12,14 +12,14 @@ describe StaticSync::Processor do
     })
   end
 
-  let(:storage) { stub }
+  let(:storage) { double }
 
   subject do
     StaticSync::Processor.new(config, storage)
   end
 
   describe "#handle_conflict" do
-    let(:file) { stub }
+    let(:file) { double }
 
     context "when in overwrite mode" do
       let(:config) do
@@ -48,7 +48,7 @@ describe StaticSync::Processor do
     end
 
     context "when in fail on cache mode" do
-      let(:file) { stub(:cached? => false) }
+      let(:file) { double(:cached? => false) }
 
       let(:config) do
         StaticSync::Config.new.merge({
@@ -61,7 +61,7 @@ describe StaticSync::Processor do
       end
 
       context "when the file is cached" do
-        let(:file) { stub(:cached? => true) }
+        let(:file) { double(:cached? => true) }
 
         it "raises a conflict error" do
           expect {
