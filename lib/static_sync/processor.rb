@@ -17,7 +17,7 @@ module StaticSync
 
     def sync
       log_sync
-      each_local_filter_file do |uploadable_file|
+      each_uploadable_file do |uploadable_file|
         next if @storage.has_version?(uploadable_file.version)
 
         look_for_conflicts(uploadable_file)
@@ -73,7 +73,7 @@ module StaticSync
       log.info("Synching #{@config.local_directory} to #{@config.remote_directory}.")
     end
 
-    def each_local_filter_file
+    def each_uploadable_file
       Dir.chdir(@config.local_directory) do
         local_filtered_files.each do |file|
           yield Uploadable.new(file, @config)
