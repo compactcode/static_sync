@@ -12,6 +12,7 @@ module StaticSync
     def initialize(config, storage = nil)
       @config  = config
       @storage = storage || StaticSync::Storage.new(config)
+      @skip    = false
     end
 
     def sync
@@ -27,7 +28,7 @@ module StaticSync
               log.info("Uploading #{file}") if @config.log
             end
             begin
-              @storage.create(current_file.headers)
+              @storage.create(current_file.headers) unless @skip
             rescue => error
               log.error("Failed to upload #{file}")
               raise error
@@ -46,7 +47,8 @@ module StaticSync
         if file.cached?
           raise ConflictError, "modifications to existing cached files are not allowed."
         end
-      else
+      elsif @config.ignore_conflict?
+        @skip = true
         log.info("#{file} already exist, skipping.") if @config.log
       end
     end
