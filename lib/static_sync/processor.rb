@@ -12,7 +12,7 @@ module StaticSync
     def initialize(config, storage = nil)
       @config  = config
       @storage = storage || StaticSync::Storage.new(config)
-      @skip    = false
+      @skip    = []
     end
 
     def sync
@@ -28,7 +28,7 @@ module StaticSync
               log.info("Uploading #{file}") if @config.log
             end
             begin
-              @storage.create(current_file.headers) unless @skip
+              @storage.create(current_file.headers) unless skip(file)
             rescue => error
               log.error("Failed to upload #{file}")
               raise error
@@ -48,9 +48,13 @@ module StaticSync
           raise ConflictError, "modifications to existing cached files are not allowed."
         end
       elsif @config.ignore_conflict?
-        @skip = true
+        @skip << file
         log.info("#{file} already exist, skipping.") if @config.log
       end
+    end
+
+    def skip(file)
+      @skip.include?(file)
     end
 
     def local_filtered_files
