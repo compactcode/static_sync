@@ -18,6 +18,34 @@ describe StaticSync::Processor do
     StaticSync::Processor.new(config, storage)
   end
 
+  describe '#sync' do
+    let(:storage) { double(has_version?: false ) }
+
+    after { subject.sync }
+
+    context 'when a file has a conflict and the config is ignoring them' do
+      before do
+        allow(storage).to receive(:has_file?).and_return(true)
+        allow(config).to receive(:ignore_conflict?).and_return(true)
+      end
+
+      it 'skips the uploading' do
+        expect(storage).not_to receive(:create)
+      end
+    end
+
+    context 'when a file has a conflict and the does not ignoring them' do
+      before do
+        allow(storage).to receive(:has_file?).and_return(true)
+        allow(config).to receive(:ignore_conflict?).and_return(false)
+      end
+
+      it 'uploads the file' do
+        expect(storage).to receive(:create).at_least(:once)
+      end
+    end
+  end
+
   describe "#handle_conflict" do
     let(:file) { double }
 
