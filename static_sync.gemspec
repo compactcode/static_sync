@@ -20,6 +20,6 @@ Gem::Specification.new do |gem|
   gem.add_dependency("fog", [">= 1.5.0"])
   gem.add_dependency("mime-types", [">= 3.0"])
 
-  gem.add_development_dependency('rspec')
+  gem.add_development_dependency('rspec', '~> 3.4')
   gem.add_development_dependency('timecop')
 end
