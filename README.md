@@ -13,12 +13,18 @@ This gem provides a command line tool for uploading static websites to amazon/ra
 
 ## Requirements
 
-* Ruby 1.9
+* Ruby >= 2.2.0
 
 ## Installation
 
-```bash
-  gem install static_sync
+```sh
+gem install static_sync
+```
+
+## Testing
+
+```sh
+bundle exec rspec spec/
 ```
 
 ## Example Command Line Usage
@@ -59,15 +65,15 @@ cache:
 
 And simply run the following command any time you want to upload.
 
-```bash
-  static_sync
+```sh
+static_sync
 ```
 
 ## Example Ruby Project Usage
 
 Very similar to the command line version except options can passed as a hash instead of being read from .static
 
-```
+```ruby
 require 'static_sync'
 
 StaticSync.upload(
