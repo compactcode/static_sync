@@ -46,6 +46,8 @@ module StaticSync
         if file.cached?
           raise ConflictError, "modifications to existing cached files are not allowed."
         end
+      else
+        log.info("#{file} already exist, skipping.") if @config.log
       end
     end
 
