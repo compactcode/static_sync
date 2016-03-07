@@ -16,6 +16,7 @@ Gem::Specification.new do |gem|
   gem.test_files    = Dir.glob("spec/**/*.rb")
   gem.require_paths = ["lib"]
   gem.has_rdoc      = false
+  gem.required_ruby_version = '>= 2.2.0'
 
   gem.add_dependency("fog", [">= 1.5.0"])
   gem.add_dependency("mime-types", ["~> 3.0"])
